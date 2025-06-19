@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K44N - Siber Güvenlik Video Takvimi</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(20, 20, 20, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            padding: 30px;
+            text-align: center;
+            border-bottom: 2px solid #333;
+            position: relative;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #00ff88, #00ccff, #ff0080);
+            animation: pulse 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #00ff88;
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+        
+        .header .subtitle {
+            font-size: 1rem;
+            color: #888;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+        
+        .membership-info {
+            background: linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%);
+            padding: 20px;
+            margin: 20px 30px;
+            border-radius: 10px;
+            border-left: 4px solid #ff0080;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .membership-info h3 {
+            color: #00ccff;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .membership-info h3::before {
+            content: '🔐';
+            font-size: 1.2rem;
+        }
+        
+        .membership-levels {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .membership-level {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .membership-level.gold {
+            border-color: #ffd700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+        }
+        
+        .membership-level.diamond {
+            border-color: #00ccff;
+            box-shadow: 0 0 10px rgba(0, 204, 255, 0.2);
+        }
+        
+        .membership-level-title {
+            font-weight: 500;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+        
+        .membership-level.gold .membership-level-title {
+            color: #ffd700;
+        }
+        
+        .membership-level.diamond .membership-level-title {
+            color: #00ccff;
+        }
+        
+        .membership-level-desc {
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+        
+        .calendar-content {
+            padding: 30px;
+        }
+        
+        .month-section {
+            margin-bottom: 40px;
+        }
+        
+        .month-header {
+            background: linear-gradient(135deg, #2a2a2a 0%, #3a3a3a 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #00ff88;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .month-header h2 {
+            font-size: 1.8rem;
+            font-weight: 500;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .video-grid {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .video-item {
+            background: linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .video-item.gold {
+            border-color: rgba(255, 215, 0, 0.3);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.1);
+        }
+        
+        .video-item.diamond {
+            border-color: rgba(0, 204, 255, 0.3);
+            box-shadow: 0 0 15px rgba(0, 204, 255, 0.1);
+        }
+        
+        .video-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .video-item.gold::before {
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+        }
+        
+        .video-item.diamond::before {
+            background: linear-gradient(90deg, transparent, rgba(0, 204, 255, 0.1), transparent);
+        }
+        
+        .video-item:hover::before {
+            left: 100%;
+        }
+        
+        .video-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 255, 136, 0.2);
+            border-color: #00ff88;
+        }
+        
+        .video-item.gold:hover {
+            box-shadow: 0 15px 30px rgba(255, 215, 0, 0.3);
+            border-color: #ffd700;
+        }
+        
+        .video-item.diamond:hover {
+            box-shadow: 0 15px 30px rgba(0, 204, 255, 0.3);
+            border-color: #00ccff;
+        }
+        
+        .video-date {
+            font-size: 0.9rem;
+            color: #00ccff;
+            font-weight: 500;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .video-date::before {
+            content: '▶';
+            color: #00ff88;
+            font-size: 0.8rem;
+        }
+        
+        .video-title {
+            font-size: 1.1rem;
+            color: #fff;
+            font-weight: 400;
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+        
+        .video-title:hover {
+            color: #00ff88;
+            cursor: pointer;
+        }
+        
+        .membership-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            padding: 6px 12px;
+            border-radius: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: fit-content;
+            margin-top: 8px;
+        }
+        
+        .membership-badge.gold {
+            color: #ffd700;
+            background: rgba(255, 215, 0, 0.1);
+            border-color: rgba(255, 215, 0, 0.3);
+        }
+        
+        .membership-badge.diamond {
+            color: #00ccff;
+            background: rgba(0, 204, 255, 0.1);
+            border-color: rgba(0, 204, 255, 0.3);
+        }
+        
+        .stats {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .stats-text {
+            color: #888;
+            font-size: 0.9rem;
+        }
+        
+        .stats-number {
+            color: #00ff88;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 10px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .calendar-content {
+                padding: 20px;
+            }
+            
+            .membership-info {
+                margin: 20px;
+                padding: 15px;
+            }
+            
+            .membership-levels {
+                grid-template-columns: 1fr;
+            }
+            
+            .month-header {
+                padding: 15px;
+            }
+            
+            .month-header h2 {
+                font-size: 1.5rem;
+            }
+            
+            .video-item {
+                padding: 15px;
+            }
+            
+            .video-title {
+                font-size: 1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .header .subtitle {
+                font-size: 0.8rem;
+            }
+            
+            .video-date {
+                font-size: 0.8rem;
+            }
+            
+            .video-title {
+                font-size: 0.95rem;
+            }
+            
+            .membership-badge {
+                font-size: 0.75rem;
+                padding: 4px 8px;
+            }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.6s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>K44N</h1>
+            <div class="subtitle">SİBER GÜVENLİK VİDEO TAKVİMİ</div>
+        </div>
+        
+        <div class="membership-info">
+            <h3>Üyelik Sistemi</h3>
+            <div class="membership-levels">
+                <div class="membership-level gold">
+                    <div class="membership-level-title">🔑 Altın Üyelik</div>
+                    <div class="membership-level-desc">Daha teknik içerikler</div>
+                    <div style="margin-top:8px; font-weight:600; color:#ffd700;">Fiyat: 49₺ / ay</div>
+                </div>
+                <div class="membership-level diamond">
+                    <div class="membership-level-title">💎 Elmas Üyelik</div>
+                    <div class="membership-level-desc">Üst düzey, ileri teknik konular</div>
+                    <div style="margin-top:8px; font-weight:600; color:#00ccff;">Fiyat: 99₺ / ay</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="calendar-content">
+            <!-- HAZİRAN 2025 -->
+            <div class="month-section fade-in">
+                <div class="month-header">
+                    <h2>Haziran 2025</h2>
+                </div>
+                <div class="video-grid">
+                    <div class="video-item">
+                        <div class="video-date">21 Haz 2025 (Cmt)</div>
+                        <div class="video-title">Hacker Kimdir? Çeşitleri Nelerdir?</div>
+                    </div>
+                    <div class="video-item">
+                        <div class="video-date">23 Haz 2025 (Pzt)</div>
+                        <div class="video-title">Hacking İle Alakalı Kavramlar</div>
+                    </div>
+                    <div class="video-item">
+                        <div class="video-date">25 Haz 2025 (Çrş)</div>
+                        <div class="video-title">Pentest Nedir? Çeşitleri Nelerdir?</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- TEMMUZ 2025 -->
+            <div class="month-section fade-in">
+                <div class="month-header">
+                    <h2>Temmuz 2025</h2>
+                </div>
+                <div class="video-grid">
+                    <div class="video-item">
+                        <div class="video-date">7 Tem 2025 (Pzt)</div>
+                        <div class="video-title">Siber Güvenlikte Hangi İşletim Sistemleri Kullanılır Siz Hangisini Kullanmalısınız?</div>
+                    </div>
+                    <div class="video-item">
+                        <div class="video-date">9 Tem 2025 (Çrş)</div>
+                        <div class="video-title">Reconnaissance(Keşif) Kelimesinin Siber Güvenlikte Karşılığı Nedir?</div>
+                    </div>
+                    <div class="video-item">
+                        <div class="video-date">11 Tem 2025 (Cum)</div>
+                        <div class="video-title">Arama Motorları Kullanılarak Google Dorks İle Bilgi Toplama</div>
+                    </div>
+                    <div class="video-item">
+                        <div class="video-date">12 Tem 2025 (Cmt)</div>
+                        <div class="video-title">Bir Web Sitesi Hakkında Bilgi Toplama</div>
+                    </div>
+                    <div class="video-item">
+                        <div class="video-date">14 Tem 2025 (Pzt)</div>
+                        <div class="video-title">Kişi ve E-mail Hakkında Bilgi Toplama</div>
+                    </div>
+                    <div class="video-item">
+                        <div class="video-date">16 Tem 2025 (Çrş)</div>
+                        <div class="video-title">Ağ Hakkında Bilgi Toplama</div>
+                    </div>
+                    <div class="video-item">
+                        <div class="video-date">18 Tem 2025 (Cum)</div>
+                        <div class="video-title">Kriptoloji Temelleri</div>
+                    </div>
+                    <div class="video-item">
+                        <div class="video-date">19 Tem 2025 (Cmt)</div>
+                        <div class="video-title">Şifreleme türleri, Hash ve Hash Cracking</div>
+                    </div>
+                    <div class="video-item">
+                        <div class="video-date">21 Tem 2025 (Pzt)</div>
+                        <div class="video-title">Nmap ile Ağ Tarama</div>
+                    </div>
+                    <div class="video-item">
+                        <div class="video-date">23 Tem 2025 (Çrş)</div>
+                        <div class="video-title">Tünelleme Protokolleri</div>
+                    </div>
+                    <div class="video-item">
+                        <div class="video-date">25 Tem 2025 (Cum)</div>
+                        <div class="video-title">IP Spoofing</div>
+                    </div>
+                    <div class="video-item">
+                        <div class="video-date">26 Tem 2025 (Cmt)</div>
+                        <div class="video-title">Ağ Saldırıları</div>
+                    </div>
+                    <div class="video-item">
+                        <div class="video-date">28 Tem 2025 (Pzt)</div>
+                        <div class="video-title">Virüs Türleri</div>
+                    </div>
+                    <div class="video-item">
+                        <div class="video-date">30 Tem 2025 (Çrş)</div>
+                        <div class="video-title">Zararlı Yazılımlardan Nasıl Korunuruz</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- AĞUSTOS 2025 -->
+            <div class="month-section fade-in">
+                <div class="month-header">
+                    <h2>Ağustos 2025</h2>
+                </div>
+                <div class="video-grid">
+                    <div class="video-item gold">
+                        <div class="video-date">1 Ağu 2025 (Cum)</div>
+                        <div class="video-title">Zararlı Yazılım Analizi Nasıl Yapılır Nasıl Tespit Edilir</div>
+                        <div class="membership-badge gold">🔑 Altın Üyelik</div>
+                    </div>
+                    <div class="video-item">
+                        <div class="video-date">2 Ağu 2025 (Cmt)</div>
+                        <div class="video-title">Sosyal Mühendislik Nedir? Örnekleri Nelerdir?</div>
+                    </div>
+                    <div class="video-item gold">
+                        <div class="video-date">4 Ağu 2025 (Pzt)</div>
+                        <div class="video-title">Sosyal Mühendislik Araçları</div>
+                        <div class="membership-badge gold">🔑 Altın Üyelik</div>
+                    </div>
+                    <div class="video-item">
+                        <div class="video-date">6 Ağu 2025 (Çrş)</div>
+                        <div class="video-title">Hizmet Reddi Saldırıları Nelerdir?</div>
+                    </div>
+                    <div class="video-item diamond">
+                        <div class="video-date">8 Ağu 2025 (Cum)</div>
+                        <div class="video-title">DoS/DDoS Saldırılarına Karşı Önlem Almak</div>
+                        <div class="membership-badge diamond">💎 Elmas Üyelik</div>
+                    </div>
+                    <div class="video-item">
+                        <div class="video-date">9 Ağu 2025 (Cmt)</div>
+                        <div class="video-title">Web Uygulama Güvenliği genel Terimler(Http, GET, POST vb)</div>
+                    </div>
+                    <div class="video-item gold">
+                        <div class="video-date">11 Ağu 2025 (Pzt)</div>
+                        <div class="video-title">Same Origin Policy Nedir?</div>
+                        <div class="membership-badge gold">🔑 Altın Üyelik</div>
+                    </div>
+                    <div class="video-item">
+                        <div class="video-date">13 Ağu 2025 (Çrş)</div>
+                        <div class="video-title">XSS Açığı Nedir? Reflected, Stored, DOM</div>
+                    </div>
+                    <div class="video-item diamond">
+                        <div class="video-date">15 Ağu 2025 (Cum)</div>
+                        <div class="video-title">XSS ile Oturum Çalma Kötü Niyetli Kişiler Tarafından Nasıl Yapılır</div>
+                        <div class="membership-badge diamond">💎 Elmas Üyelik</div>
+                    </div>
+                    <div class="video-item">
+                        <div class="video-date">16 Ağu 2025 (Cmt)</div>
+                        <div class="video-title">CSRF Nedir?</div>
+                    </div>
+                    <div class="video-item diamond">
+                        <div class="video-date">18 Ağu 2025 (Pzt)</div>
+                        <div class="video-title">SQL Injection Nedir Kötü Niyetli Kişiler Tarafından Nasıl Kullanılır</div>
+                        <div class="membership-badge diamond">💎 Elmas Üyelik</div>
+                    </div>
+                    <div class="video-item gold">
+                        <div class="video-date">20 Ağu 2025 (Çrş)</div>
+                        <div class="video-title">LFI & RFI Açıkları</div>
+                        <div class="membership-badge gold">🔑 Altın Üyelik</div>
+                    </div>
+                    <div class="video-item diamond">
+                        <div class="video-date">22 Ağu 2025 (Cum)</div>
+                        <div class="video-title">IDOR Açığı ile Yetkisiz Erişim</div>
+                        <div class="membership-badge diamond">💎 Elmas Üyelik</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stats">
+                <div class="stats-text">
+                    🔔 Videolar saat 18:00'de yayında olacak.<br>
+                    💎 Üyelik sistemi 1 Ağustos 2025'te başlayacak.<br>
+                    ✍️ Takibe alın, yorum yapın, destek olun!<br>
+                    <span style="color: #00ccff; font-weight: 500; margin-top: 10px; display: inline-block;">#K44N</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Scroll animasyonu için
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'fadeIn 0.6s ease-in-out';
+                }
+            });
+        }, observerOptions);
+        
+        document.querySelectorAll('.month-section').forEach(section => {
+            observer.observe(section);
+        });
+        
+        // Video başlıklarına tıklama efekti
+        document.querySelectorAll('.video-title').forEach(title => {
+            title.addEventListener('click', function() {
+                this.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    this.style.transform = 'scale(1)';
+                }, 100);
+            });
+        });
+        
+        // Üyelik rozet animasyonu
+        document.querySelectorAll('.membership-badge').forEach(badge => {
+            badge.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.05)';
+            });
+            
+            badge.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>
